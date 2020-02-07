@@ -1,7 +1,7 @@
 package mngt.service;
 
-import mngt.repository.UserRepository;
 import mngt.model.User;
+import mngt.repository.UserRepository;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User get(long id) {
-        User user = userRepository.findOne(id);
+        User user = userRepository.findById(id).orElse(null);
         LOG.info("getting user: %s", user);
         return user;
     }
@@ -83,8 +83,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User edit(User user) {
-        User updatedUser = null;
-        if (userRepository.exists(user.getId())) {
+        User updatedUser;
+        if (userRepository.existsById(user.getId())) {
             Set<ConstraintViolation<User>> violations = validator.validate(user);
             if (violations.isEmpty()) {
                 LOG.info("user: %s is edited", user);
@@ -95,7 +95,9 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             ConstraintViolation<User> violation = ConstraintViolationImpl.forBeanValidation(null,
-                    null, "User is not exist", User.class, user, null, user, null, null, null, null);
+                    null, null, "User is not exist",
+                    User.class, user, null, user, null, null,
+                    null, null);
             LOG.warn("user: %s is not exist");
             throw new ConstraintViolationException(Collections.singleton(violation));
         }
@@ -109,7 +111,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void delete(long id) {
-        userRepository.delete(id);
+        userRepository.deleteById(id);
         LOG.info("delete user by id: %d", id);
     }
 

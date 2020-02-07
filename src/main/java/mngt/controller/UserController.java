@@ -1,7 +1,7 @@
 package mngt.controller;
 
-import mngt.service.UserService;
 import mngt.model.User;
+import mngt.service.UserService;
 import mngt.util.ResponseMessage;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;

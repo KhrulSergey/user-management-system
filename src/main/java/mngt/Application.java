@@ -1,10 +1,10 @@
 package mngt;
 
+import mngt.controller.UserController;
 import mngt.repository.RoleRepository;
 import mngt.repository.UserRepository;
 import mngt.service.UserService;
 import mngt.service.UserServiceImpl;
-import mngt.controller.UserController;
 import mngt.util.DeserializerRoleJsonConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

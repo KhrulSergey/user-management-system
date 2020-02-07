@@ -5,25 +5,39 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 /**
  * Интерфейс доступа к данным сущности "Пользователи" из БД
  */
 @CacheConfig(cacheNames = "usersCache")
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>,
+        JpaSpecificationExecutor<User> {
+
 
     @Cacheable
     @Override
-    User save(User entity);
-
-    @Cacheable
-    @Override
-    User findOne(Long id);
-
-    @Override
-    void delete(Long id);
-
-    @Cacheable
     Page<User> findAll(Pageable pageable);
+
+    @Cacheable
+    @Override
+    Optional<User> findById(Long id);
+
+    @Cacheable
+    @Override
+    <S extends User> S saveAndFlush(S entity);
+
+    @Override
+    void deleteById(Long id);
+
+    @Cacheable
+    @Query("select u from User u where u.login=:login AND u.password=:password")
+    User findByLoginAndPassword(@Param("login") String login, @Param("password") String password);
+
 }
+

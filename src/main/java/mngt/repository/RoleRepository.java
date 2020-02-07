@@ -3,15 +3,19 @@ package mngt.repository;
 import mngt.model.Role;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.Optional;
 
 /**
  * Интерфейс доступа к данным сущности "Роль" из БД
  */
 @CacheConfig(cacheNames = "roleCache")
-public interface RoleRepository extends CrudRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Long>,
+            JpaSpecificationExecutor<Role> {
 
     @Cacheable
     @Override
-    Role findOne(Long aLong);
+    Optional<Role> findById(Long aLong);
 }
