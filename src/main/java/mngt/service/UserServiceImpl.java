@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> list(Pageable pageable) {
         LOG.info("getting users: ");
-        return userRepository.findAll(pageable);
+        return userRepository.findAllByOrderByIdAsc(pageable);
     }
 
     /**
@@ -54,8 +54,8 @@ public class UserServiceImpl implements UserService {
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         if (violations.isEmpty()) {
             LOG.info("save user: %s", user);
-            return userRepository.save(user)
-                    .getId();
+            User userSaved = userRepository.saveAndFlush(user);
+            return userSaved.getId();
         } else {
             LOG.warn("user: %s have constraint violations: %s", user, violations);
             throw new ConstraintViolationException(violations);
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
             Set<ConstraintViolation<User>> violations = validator.validate(user);
             if (violations.isEmpty()) {
                 LOG.info("user: %s is edited", user);
-                updatedUser = userRepository.save(user);
+                updatedUser = userRepository.saveAndFlush(user);
             } else {
                 LOG.warn("edited user: %o have constraint violations: %s", user, violations);
                 throw new ConstraintViolationException(violations);

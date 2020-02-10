@@ -21,8 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long>,
 
 
     @Cacheable
-    @Override
-    Page<User> findAll(Pageable pageable);
+    Page<User> findAllByOrderByIdAsc(Pageable pageable);
 
     @Cacheable
     @Override
@@ -37,7 +36,7 @@ public interface UserRepository extends JpaRepository<User, Long>,
 
     @Cacheable
     @Query("select u from User u where u.login=:login AND u.password=:password")
-    User findByLoginAndPassword(@Param("login") String login, @Param("password") String password);
+    Optional<User> findByLoginAndPassword(@Param("login") String login, @Param("password") String password);
 
 }
 

@@ -52,7 +52,7 @@ public class UserController {
     public ResponseEntity<ResponseMessage> add(@RequestBody User user) {
         try {
             long id = userService.add(user);
-            URI location = ServletUriComponentsBuilder.fromPath(PATH_GET)
+            URI location = ServletUriComponentsBuilder.fromPath(PATH_ADD)
                     .buildAndExpand(id)
                     .toUri();
             return ResponseEntity.created(location)
